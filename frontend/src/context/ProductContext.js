@@ -17,7 +17,6 @@ export const ProductProvider = ({ children }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [socket, setSocket] = useState(null);
 
   const API_BASE_URL = 'https://mpp-exam-production-5408.up.railway.app/api';
 
