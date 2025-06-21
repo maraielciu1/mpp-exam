@@ -22,8 +22,7 @@ export const ProductProvider = ({ children }) => {
 
   // Initialize WebSocket connection
   useEffect(() => {
-    const newSocket = io('http://localhost:5001');
-    setSocket(newSocket);
+    const newSocket = io('https://mpp-exam-production-5408.up.railway.app');
 
     // Listen for real-time updates
     newSocket.on('candidates-updated', (updatedCandidates) => {
