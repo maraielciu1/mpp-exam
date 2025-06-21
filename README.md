@@ -1,159 +1,208 @@
-# MPP Exam - Full Stack Project
+# MPP Exam - Election Candidates Management System
 
-A React frontend with Express backend application for displaying products.
+A full-stack web application for managing election candidates with real-time updates using React frontend and Express backend with WebSocket support.
+
+## Features
+
+- **CRUD Operations**: Create, Read, Update, and Delete candidates
+- **Real-time Updates**: WebSocket integration for live updates across all connected clients
+- **Random Candidate Generation**: Automated generation of random candidates with configurable intervals
+- **Party Distribution Chart**: Visual representation of candidates per party
+- **Responsive Design**: Modern UI that works on desktop and mobile devices
+- **Error Handling**: Comprehensive error handling with user-friendly messages
+- **Loading States**: Smooth loading indicators for better user experience
+
+## Tech Stack
+
+### Backend
+- **Node.js** with **Express.js**
+- **Socket.io** for real-time WebSocket communication
+- **CORS** for cross-origin requests
+- **In-memory storage** (ready for database integration)
+
+### Frontend
+- **React.js** with hooks
+- **React Router** for navigation
+- **Socket.io-client** for WebSocket connections
+- **CSS3** with modern styling and animations
 
 ## Project Structure
 
 ```
 mpp-exam/
-├── backend/          # Express.js backend
-│   ├── server.js     # Main server file
-│   ├── package.json  # Backend dependencies
-│   └── data/         # Database configuration
-└── frontend/         # React.js frontend
-    ├── public/       # Static files
-    ├── src/          # React components
-    └── package.json  # Frontend dependencies
+├── backend/
+│   ├── data/
+│   │   └── candidates.js          # Candidate data and generation logic
+│   ├── package.json
+│   └── server.js                  # Express server with WebSocket
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── ProductsPage.js    # Main candidates listing
+│   │   │   ├── ProductDetail.js   # Individual candidate view
+│   │   │   ├── CandidateForm.js   # Add/Edit candidate form
+│   │   │   └── PartyChart.js      # Party distribution chart
+│   │   ├── context/
+│   │   │   └── ProductContext.js  # React context with API calls
+│   │   └── App.js                 # Main app component
+│   └── package.json
+└── README.md
 ```
 
-## Features
+## Backend API Endpoints
 
-- **Backend**: Express.js server with RESTful API endpoints
-- **Frontend**: React.js application with modern UI
-- **Products Display**: Beautiful product cards with images, prices, and descriptions
-- **Responsive Design**: Works on desktop and mobile devices
-- **Local Data**: Products stored in frontend array (as requested)
+### Candidates
+- `GET /api/candidates` - Get all candidates
+- `GET /api/candidates/:id` - Get candidate by ID
+- `POST /api/candidates` - Create new candidate
+- `PUT /api/candidates/:id` - Update candidate
+- `DELETE /api/candidates/:id` - Delete candidate
 
-## Getting Started
+### Party Statistics
+- `GET /api/party-stats` - Get party distribution statistics
+- `GET /api/parties` - Get available parties
+
+### Generation Control
+- `POST /api/generation/start` - Start random candidate generation
+- `POST /api/generation/stop` - Stop random candidate generation
+- `GET /api/generation/status` - Get generation status
+
+### Health Check
+- `GET /api/health` - Server health status
+
+## WebSocket Events
+
+### Server to Client
+- `candidates-updated` - Emitted when candidates list changes
+- `party-stats-updated` - Emitted when party statistics change
+
+### Client to Server
+- Automatic connection handling with real-time updates
+
+## Setup Instructions
 
 ### Prerequisites
-
-- Node.js (version 14 or higher)
+- Node.js (v14 or higher)
 - npm or yarn
 
-### Installation
-
-1. **Clone the repository** (if applicable)
-2. **Install backend dependencies**:
+### Backend Setup
+1. Navigate to the backend directory:
    ```bash
    cd backend
+   ```
+
+2. Install dependencies:
+   ```bash
    npm install
    ```
 
-3. **Install frontend dependencies**:
+3. Start the development server:
    ```bash
-   cd frontend
-   npm install
-   ```
-
-### Running the Application
-
-#### Option 1: Run Backend and Frontend Separately
-
-1. **Start the backend server**:
-   ```bash
-   cd backend
    npm run dev
    ```
-   The backend will run on `http://localhost:5000`
 
-2. **Start the frontend development server** (in a new terminal):
+The backend will run on `http://localhost:5000`
+
+### Frontend Setup
+1. Navigate to the frontend directory:
    ```bash
    cd frontend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
    npm start
    ```
-   The frontend will run on `http://localhost:3000`
 
-#### Option 2: Run Both Simultaneously
+The frontend will run on `http://localhost:3000`
 
-You can run both servers in separate terminal windows or use a tool like `concurrently`.
+## Usage
 
-### API Endpoints
+### Adding Candidates
+1. Click "Add New Candidate" on the main page
+2. Fill in the candidate details (name, party, description, image URL)
+3. Click "Create Candidate"
 
-The backend provides the following endpoints:
+### Editing Candidates
+1. Click "Edit" on any candidate card
+2. Modify the candidate information
+3. Click "Update Candidate"
 
-- `GET /` - Welcome message
-- `GET /api/products` - Get all products
-- `GET /api/products/:id` - Get a specific product by ID
+### Deleting Candidates
+1. Navigate to a candidate's detail page
+2. Click "Delete Candidate"
+3. Confirm the deletion
 
-### Frontend Features
+### Random Generation
+1. Click "Start Generation" to begin automatic candidate creation
+2. New candidates will be generated every 3 seconds
+3. Click "Stop Generation" to halt the process
+4. All connected clients will see real-time updates
 
-- **Product Grid**: Displays products in a responsive grid layout
-- **Product Cards**: Each product shows:
-  - Product image
-  - Product name
-  - Price
-  - Description
-  - Category tag
-- **Loading State**: Shows loading animation while products load
-- **Error Handling**: Displays error messages if something goes wrong
-- **Responsive Design**: Adapts to different screen sizes
+### Viewing Party Distribution
+- The pie chart on the main page shows the distribution of candidates by party
+- Updates automatically when candidates are added, edited, or deleted
 
-### Technologies Used
+## Real-time Features
 
-**Backend:**
-- Express.js
-- CORS
-- dotenv
+- **Live Updates**: All CRUD operations are reflected immediately across all connected clients
+- **WebSocket Connection**: Automatic reconnection handling
+- **Party Statistics**: Real-time updates to the party distribution chart
+- **Generation Status**: Live status updates for the random generation process
 
-**Frontend:**
-- React.js
-- CSS3 with modern styling
-- Responsive design
+## Error Handling
 
-## Development
+- **Network Errors**: Graceful handling of API failures
+- **Validation Errors**: Form validation with user-friendly error messages
+- **Connection Issues**: Automatic WebSocket reconnection
+- **Loading States**: Visual feedback during API operations
 
-### Backend Development
+## Future Enhancements
 
-The backend is set up with:
-- ES6 modules support
-- CORS enabled for frontend communication
-- Environment variable support
-- Nodemon for development hot-reloading
+- Database integration (MongoDB, PostgreSQL)
+- User authentication and authorization
+- File upload for candidate images
+- Advanced filtering and search
+- Export functionality
+- Analytics dashboard
 
-### Frontend Development
+## API Response Examples
 
-The frontend includes:
-- React 18 with hooks
-- Modern CSS with animations
-- Responsive design
-- Proxy configuration for API calls
-
-## Customization
-
-### Adding More Products
-
-To add more products, edit the `localProducts` array in `frontend/src/App.js`:
-
-```javascript
-const localProducts = [
-  // Add your products here
-  {
-    id: 9,
-    name: "Your Product",
-    price: 99.99,
-    description: "Product description",
-    category: "Category",
-    image: "https://via.placeholder.com/300x200?text=Your+Product"
-  }
-];
+### Create Candidate
+```json
+{
+  "id": 5,
+  "name": "John Doe",
+  "party": "Democratic Party",
+  "description": "Experienced leader with vision",
+  "image": "https://example.com/image.jpg"
+}
 ```
 
-### Styling
+### Party Statistics
+```json
+{
+  "Democratic Party": 3,
+  "Republican Party": 2,
+  "Independent": 1,
+  "Green Party": 1,
+  "Libertarian Party": 0
+}
+```
 
-The application uses modern CSS with:
-- CSS Grid for layout
-- Flexbox for alignment
-- CSS animations and transitions
-- Responsive breakpoints
-- Modern color scheme
+## Contributing
 
-## Troubleshooting
-
-1. **Port conflicts**: If port 3000 or 5000 are in use, the servers will automatically try the next available port
-2. **CORS issues**: The backend has CORS enabled, but if you encounter issues, check the CORS configuration in `server.js`
-3. **Module not found**: Make sure you've installed all dependencies with `npm install`
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
 ## License
 
-This project is created for MPP Exam purposes. 
+This project is licensed under the MIT License. 

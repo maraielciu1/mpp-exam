@@ -1,7 +1,15 @@
 {
   "name": "mpp-exam-frontend",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "description": "React frontend for MPP exam project",
+  "main": "index.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "dev": "react-scripts start"
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -9,15 +17,10 @@
     "axios": "^1.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
+    "socket.io-client": "^4.8.1",
     "web-vitals": "^2.1.4"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "dev": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
@@ -37,5 +40,13 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:5000"
+  "keywords": [
+    "react",
+    "frontend",
+    "candidates",
+    "election"
+  ],
+  "author": "",
+  "license": "MIT",
+  "proxy": "http://localhost:5001"
 }
