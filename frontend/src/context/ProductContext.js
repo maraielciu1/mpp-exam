@@ -19,7 +19,7 @@ export const ProductProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [socket, setSocket] = useState(null);
 
-  const API_BASE_URL = 'http://localhost:5001/api';
+  const API_BASE_URL = 'https://mpp-exam-production-5408.up.railway.app/api';
 
   // Initialize WebSocket connection
   useEffect(() => {
