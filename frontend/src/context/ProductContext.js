@@ -14,15 +14,16 @@ export const useProductContext = () => {
 export const ProductProvider = ({ children }) => {
   const [candidates, setCandidates] = useState([]);
   const [partyStats, setPartyStats] = useState({});
-  const [isGenerating, setIsGenerating] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isGenerating, setIsGenerating] = useState(false);
 
-  const API_BASE_URL = 'https://mpp-exam-production-5408.up.railway.app/api';
+  //const API_BASE_URL = 'https://mpp-exam-production-5408.up.railway.app/api';
+  const API_BASE_URL = 'http://localhost:5001/api'
 
   // Initialize WebSocket connection
   useEffect(() => {
-    const newSocket = io('https://mpp-exam-production-5408.up.railway.app');
+    const newSocket = io('http://localhost:5001');
 
     // Listen for real-time updates
     newSocket.on('candidates-updated', (updatedCandidates) => {
@@ -46,10 +47,9 @@ export const ProductProvider = ({ children }) => {
   const fetchInitialData = async () => {
     try {
       setLoading(true);
-      const [candidatesResponse, statsResponse, generationStatusResponse] = await Promise.all([
+      const [candidatesResponse, statsResponse] = await Promise.all([
         fetch(`${API_BASE_URL}/candidates`),
-        fetch(`${API_BASE_URL}/party-stats`),
-        fetch(`${API_BASE_URL}/generation/status`)
+        fetch(`${API_BASE_URL}/party-stats`)
       ]);
 
       if (candidatesResponse.ok) {
@@ -61,16 +61,54 @@ export const ProductProvider = ({ children }) => {
         const statsData = await statsResponse.json();
         setPartyStats(statsData);
       }
-
-      if (generationStatusResponse.ok) {
-        const statusData = await generationStatusResponse.json();
-        setIsGenerating(statusData.isRunning);
-      }
     } catch (err) {
       setError('Failed to fetch initial data');
       console.error('Error fetching initial data:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Generation functions
+  const startGeneration = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/candidates/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ action: 'start' }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to start generation');
+      }
+
+      setIsGenerating(true);
+    } catch (err) {
+      setError('Failed to start generation');
+      throw err;
+    }
+  };
+
+  const stopGeneration = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/candidates/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ action: 'stop' }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to stop generation');
+      }
+
+      setIsGenerating(false);
+    } catch (err) {
+      setError('Failed to stop generation');
+      throw err;
     }
   };
 
@@ -136,40 +174,6 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
-  const startGeneration = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/generation/start`, {
-        method: 'POST',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to start generation');
-      }
-
-      setIsGenerating(true);
-    } catch (err) {
-      setError('Failed to start generation');
-      throw err;
-    }
-  };
-
-  const stopGeneration = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/generation/stop`, {
-        method: 'POST',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to stop generation');
-      }
-
-      setIsGenerating(false);
-    } catch (err) {
-      setError('Failed to stop generation');
-      throw err;
-    }
-  };
-
   const getCandidateById = (id) => {
     return candidates.find(candidate => candidate.id === id);
   };
@@ -181,14 +185,14 @@ export const ProductProvider = ({ children }) => {
   const value = {
     candidates,
     partyStats,
-    isGenerating,
     loading,
     error,
+    isGenerating,
+    startGeneration,
+    stopGeneration,
     createCandidate,
     updateCandidate,
     deleteCandidate,
-    startGeneration,
-    stopGeneration,
     getCandidateById,
     clearError,
   };

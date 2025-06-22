@@ -1,0 +1,168 @@
+.vote-chart-container {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  padding: 30px;
+  margin: 20px 0;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+.vote-chart-title {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.vote-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.vote-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.vote-bar-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.candidate-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  flex-shrink: 0;
+}
+
+.candidate-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+.candidate-party {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+.bar-wrapper {
+  flex: 1;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+.vote-bar {
+  height: 100%;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 15px;
+  transition: width 1s ease-in-out;
+  position: relative;
+  min-width: 60px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.vote-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.vote-count {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  z-index: 1;
+  position: relative;
+}
+
+.vote-summary {
+  margin-top: 30px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.vote-summary p {
+  margin: 8px 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .vote-chart-container {
+    padding: 20px;
+    margin: 15px 0;
+  }
+  
+  .vote-chart-title {
+    font-size: 1.5rem;
+  }
+  
+  .vote-bar-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .candidate-info {
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .bar-wrapper {
+    width: 100%;
+  }
+  
+  .vote-bar {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .vote-chart-container {
+    padding: 15px;
+  }
+  
+  .vote-chart-title {
+    font-size: 1.3rem;
+  }
+  
+  .candidate-name {
+    font-size: 1rem;
+  }
+  
+  .vote-count {
+    font-size: 0.8rem;
+  }
+} 

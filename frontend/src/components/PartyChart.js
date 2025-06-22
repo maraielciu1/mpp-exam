@@ -1,7 +1,10 @@
 import React from 'react';
 import './PartyChart.css';
 
-const PartyChart = ({ partyStats }) => {
+const PartyChart = ({ partyStats: propPartyStats }) => {
+  // Use prop if provided, otherwise use empty object
+  const partyStats = propPartyStats || {};
+  
   const colors = {
     'Democratic Party': '#1e88e5',
     'Republican Party': '#e53935',
@@ -10,7 +13,9 @@ const PartyChart = ({ partyStats }) => {
     'Libertarian Party': '#9c27b0'
   };
 
-  const totalCandidates = Object.values(partyStats).reduce((sum, count) => sum + count, 0);
+  // Safely get values and handle undefined/null
+  const values = Object.values(partyStats || {});
+  const totalCandidates = values.reduce((sum, count) => sum + (count || 0), 0);
   
   if (totalCandidates === 0) {
     return (
@@ -24,7 +29,7 @@ const PartyChart = ({ partyStats }) => {
   let currentAngle = 0;
   const segments = [];
 
-  Object.entries(partyStats).forEach(([party, count]) => {
+  Object.entries(partyStats || {}).forEach(([party, count]) => {
     if (count > 0) {
       const percentage = (count / totalCandidates) * 100;
       const angle = (percentage / 100) * 360;
