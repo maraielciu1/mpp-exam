@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import io from 'socket.io-client';
@@ -13,7 +13,6 @@ const NewsFeed = () => {
   const [selectedParty, setSelectedParty] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [newsType, setNewsType] = useState('all'); // 'all', 'public', 'personalized'
-  const [socket, setSocket] = useState(null);
   const [generatingNews, setGeneratingNews] = useState(false);
 
   const API_BASE_URL = '/api';
@@ -259,14 +258,7 @@ const NewsFeed = () => {
     }
     
     // Initialize WebSocket connection
-    const newSocket = io();
-    setSocket(newSocket);
-
-    newSocket.on('user-news-updated', (data) => {
-      if (data.userId === user?.cnp) {
-        fetchUserNews();
-      }
-    });
+    const newSocket = io('http://localhost:5001');
 
     newSocket.on('news-updated', () => {
       console.log('News update received, refreshing...');
@@ -278,7 +270,7 @@ const NewsFeed = () => {
         newSocket.disconnect();
       }
     };
-  }, [user]);
+  }, [user, fetchUserNews]);
 
   const fetchCandidates = async () => {
     try {
@@ -299,7 +291,7 @@ const NewsFeed = () => {
     }
   };
 
-  const fetchUserNews = async () => {
+  const fetchUserNews = useCallback(async () => {
     if (!user) return;
     
     try {
@@ -315,7 +307,7 @@ const NewsFeed = () => {
     } catch (err) {
       console.error('Error fetching user news:', err);
     }
-  };
+  }, [user, API_BASE_URL]);
 
   const deleteUserNews = async (newsId) => {
     try {

@@ -207,7 +207,6 @@ const VotingDetail = () => {
     );
   }
 
-  const canVote = user && !voteStatus?.hasVoted;
   const candidateFakeNews = fakeNewsData[candidate.id] || fakeNewsData[1];
 
   return (

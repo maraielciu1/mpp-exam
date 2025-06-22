@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import PartyChart from './PartyChart';
@@ -27,44 +27,7 @@ const VotingPage = () => {
 
   const API_BASE_URL = '/api';
 
-  // Fetch candidates, party stats, and vote status data
-  useEffect(() => {
-    fetchData();
-  }, [user]);
-
-  // Check if Round 2 is available and redirect
-  useEffect(() => {
-    const totalVotes = Object.values(voteCounts).reduce((sum, count) => sum + parseInt(count || 0), 0);
-    if (totalVotes >= 49 && !round2Available) {
-      setRound2Available(true);
-      // Automatically get Round 1 results and redirect to Round 2
-      handleAutoEndRound1();
-    }
-  }, [voteCounts, round2Available]);
-
-  const handleAutoEndRound1 = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/election/end-round-1`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Automatically redirect to Round 2 without showing modal
-        navigate('/round2');
-      } else {
-        console.error('Failed to auto-end Round 1:', data.message);
-      }
-    } catch (error) {
-      console.error('Error auto-ending Round 1:', error);
-    }
-  };
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       const [candidatesResponse, statsResponse] = await Promise.all([
@@ -106,7 +69,44 @@ const VotingPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, checkVoteStatus, API_BASE_URL]);
+
+  const handleAutoEndRound1 = useCallback(async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/election/end-round-1`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Automatically redirect to Round 2 without showing modal
+        navigate('/round2');
+      } else {
+        console.error('Failed to auto-end Round 1:', data.message);
+      }
+    } catch (error) {
+      console.error('Error auto-ending Round 1:', error);
+    }
+  }, [API_BASE_URL, navigate]);
+
+  // Fetch candidates, party stats, and vote status data
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  // Check if Round 2 is available and redirect
+  useEffect(() => {
+    const totalVotes = Object.values(voteCounts).reduce((sum, count) => sum + parseInt(count || 0), 0);
+    if (totalVotes >= 49 && !round2Available) {
+      setRound2Available(true);
+      // Automatically get Round 1 results and redirect to Round 2
+      handleAutoEndRound1();
+    }
+  }, [voteCounts, round2Available, handleAutoEndRound1]);
 
   const handleEndRound1 = async () => {
     try {
@@ -146,7 +146,7 @@ const VotingPage = () => {
       });
 
       if (response.ok) {
-        const result = await response.json();
+        await response.json();
         alert('Votes have been redistributed based on news bias ratio! The candidate with the highest positive/negative news ratio now has the most votes.');
         // Refresh the page to show updated vote counts
         window.location.reload();
