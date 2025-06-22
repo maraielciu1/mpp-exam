@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import './AuthForm.css';
+import { useNavigate } from 'react-router-dom';
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -9,6 +10,7 @@ const AuthForm = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,7 +25,7 @@ const AuthForm = () => {
           return;
         }
 
-        const response = await fetch('http://localhost:5001/api/auth/login', {
+        const response = await fetch('https://mpp-exam-production-5408.up.railway.app/api/auth/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -38,7 +40,8 @@ const AuthForm = () => {
           return;
         }
 
-        login(data);
+        login(data.user);
+        navigate('/vote');
       } else {
         // Register - user provides both name and CNP
         if (!name || !cnp) {
@@ -52,12 +55,12 @@ const AuthForm = () => {
           return;
         }
 
-        const response = await fetch('http://localhost:5001/api/auth/register', {
+        const response = await fetch('https://mpp-exam-production-5408.up.railway.app/api/auth/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ name, cnp }),
+          body: JSON.stringify({ name, cnp: parseInt(cnp) }),
         });
 
         const data = await response.json();
@@ -68,7 +71,8 @@ const AuthForm = () => {
         }
 
         // Auto-login after registration
-        login(data);
+        login(data.user);
+        navigate('/vote');
       }
     } catch (error) {
       setError('Network error. Please try again.');

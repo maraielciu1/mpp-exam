@@ -16,14 +16,14 @@ export const ProductProvider = ({ children }) => {
   const [partyStats, setPartyStats] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [generating, setGenerating] = useState(false);
 
-  //const API_BASE_URL = 'https://mpp-exam-production-5408.up.railway.app/api';
-  const API_BASE_URL = 'http://localhost:5001/api'
+  const API_BASE_URL = 'https://mpp-exam-production-5408.up.railway.app/api'
+  const SOCKET_URL = 'https://mpp-exam-production-5408.up.railway.app'
 
   // Initialize WebSocket connection
   useEffect(() => {
-    const newSocket = io('http://localhost:5001');
+    const newSocket = io(SOCKET_URL);
 
     // Listen for real-time updates
     newSocket.on('candidates-updated', (updatedCandidates) => {
@@ -84,7 +84,7 @@ export const ProductProvider = ({ children }) => {
         throw new Error('Failed to start generation');
       }
 
-      setIsGenerating(true);
+      setGenerating(true);
     } catch (err) {
       setError('Failed to start generation');
       throw err;
@@ -105,7 +105,7 @@ export const ProductProvider = ({ children }) => {
         throw new Error('Failed to stop generation');
       }
 
-      setIsGenerating(false);
+      setGenerating(false);
     } catch (err) {
       setError('Failed to stop generation');
       throw err;
@@ -187,7 +187,7 @@ export const ProductProvider = ({ children }) => {
     partyStats,
     loading,
     error,
-    isGenerating,
+    generating,
     startGeneration,
     stopGeneration,
     createCandidate,

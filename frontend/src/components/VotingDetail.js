@@ -90,15 +90,18 @@ const VotingDetail = () => {
   useEffect(() => {
     const fetchCandidate = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/api/candidates/${id}`);
+        setLoading(true);
+        const response = await fetch(`https://mpp-exam-production-5408.up.railway.app/api/candidates/${id}`);
+        
         if (response.ok) {
-          const data = await response.json();
-          setCandidate(data);
+          const candidateData = await response.json();
+          setCandidate(candidateData);
         } else {
-          setError('Candidate not found');
+          setError('Failed to load candidate');
         }
-      } catch (error) {
-        setError('Error fetching candidate details');
+      } catch (err) {
+        setError('Error loading candidate');
+        console.error('Error fetching candidate:', err);
       } finally {
         setLoading(false);
       }
@@ -134,7 +137,7 @@ const VotingDetail = () => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5001/api/vote', {
+      const response = await fetch('https://mpp-exam-production-5408.up.railway.app/api/vote', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

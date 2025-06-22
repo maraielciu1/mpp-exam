@@ -35,15 +35,16 @@ export const AuthProvider = ({ children }) => {
 
   const checkVoteStatus = async (cnp) => {
     try {
-      const response = await fetch(`http://localhost:5001/api/auth/vote-status/${cnp}`);
+      const response = await fetch(`https://mpp-exam-production-5408.up.railway.app/api/auth/vote-status/${cnp}`);
+      
       if (response.ok) {
-        const data = await response.json();
-        return data;
+        return await response.json();
+      } else {
+        throw new Error('Failed to check vote status');
       }
-      return { hasVoted: false, vote: null };
     } catch (error) {
       console.error('Error checking vote status:', error);
-      return { hasVoted: false, vote: null };
+      throw error;
     }
   };
 

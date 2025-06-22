@@ -275,7 +275,7 @@ const NewsFeed = () => {
       fetchUserNews();
     }
 
-    const newSocket = io('http://localhost:5001');
+    const newSocket = io('https://mpp-exam-production-5408.up.railway.app');
 
     newSocket.on('news-updated', () => {
       console.log('News update received, refreshing...');
