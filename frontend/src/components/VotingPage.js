@@ -20,8 +20,6 @@ const VotingPage = () => {
   const [showRound2Winners, setShowRound2Winners] = useState(false);
   const [round2Data, setRound2Data] = useState(null);
   const [endingRound, setEndingRound] = useState(false);
-  const [round1Results, setRound1Results] = useState(null);
-  const [showRound1Modal, setShowRound1Modal] = useState(false);
   const [redistributing, setRedistributing] = useState(false);
   const [round2Available, setRound2Available] = useState(false);
 

@@ -251,13 +251,30 @@ const NewsFeed = () => {
     ]
   };
 
+  const fetchUserNews = useCallback(async () => {
+    if (!user) return;
+    
+    try {
+      const response = await fetch(`${API_BASE_URL}/user-news/${user.cnp}`);
+      
+      if (response.ok) {
+        const userNewsData = await response.json();
+        console.log('Fetched user news:', userNewsData); // Debug log
+        setUserNews(userNewsData);
+      } else {
+        console.error('Failed to load user news');
+      }
+    } catch (err) {
+      console.error('Error fetching user news:', err);
+    }
+  }, [user, API_BASE_URL]);
+
   useEffect(() => {
     fetchCandidates();
     if (user) {
       fetchUserNews();
     }
-    
-    // Initialize WebSocket connection
+
     const newSocket = io('http://localhost:5001');
 
     newSocket.on('news-updated', () => {
@@ -290,24 +307,6 @@ const NewsFeed = () => {
       setLoading(false);
     }
   };
-
-  const fetchUserNews = useCallback(async () => {
-    if (!user) return;
-    
-    try {
-      const response = await fetch(`${API_BASE_URL}/user-news/${user.cnp}`);
-      
-      if (response.ok) {
-        const userNewsData = await response.json();
-        console.log('Fetched user news:', userNewsData); // Debug log
-        setUserNews(userNewsData);
-      } else {
-        console.error('Failed to load user news');
-      }
-    } catch (err) {
-      console.error('Error fetching user news:', err);
-    }
-  }, [user, API_BASE_URL]);
 
   const deleteUserNews = async (newsId) => {
     try {
